@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const EditableTable = ({ users }) => {
+const EditableTable = ({ users, setUsers }) => {
   const [filtros, setFiltros] = useState({
+    nome: '',
+    idade: '',
+    peso: '',
+    altura: '',
+    tempoTreino: '',
+  });
+  
+  const [editIndex, setEditIndex] = useState(-1);
+  const [newUserData, setNewUserData] = useState({
     nome: '',
     idade: '',
     peso: '',
@@ -15,7 +24,6 @@ const EditableTable = ({ users }) => {
     setFiltros({ ...filtros, [name]: value });
   };
 
-  // Função para aplicar os filtros
   const aplicarFiltros = () => {
     return users.filter(user => {
       return (
@@ -26,6 +34,25 @@ const EditableTable = ({ users }) => {
         (!filtros.tempoTreino || user.tempoTreino.toString().includes(filtros.tempoTreino))
       );
     });
+  };
+
+  const handleEdit = (index) => {
+    const userToEdit = users[index];
+    setNewUserData(userToEdit);
+    setEditIndex(index);
+  };
+
+  const handleSave = () => {
+    const updatedUsers = [...users];
+    updatedUsers[editIndex] = newUserData;
+    setUsers(updatedUsers);
+    setEditIndex(-1);
+    setNewUserData({ nome: '', idade: '', peso: '', altura: '', tempoTreino: '' });
+  };
+
+  const handleDelete = (index) => {
+    const updatedUsers = users.filter((_, i) => i !== index);
+    setUsers(updatedUsers);
   };
 
   return (
@@ -82,16 +109,57 @@ const EditableTable = ({ users }) => {
             <th>Peso</th>
             <th>Altura</th>
             <th>Tempo de Treino</th>
+            <th>Ações</th>
           </tr>
         </thead>
         <tbody>
           {aplicarFiltros().map((user, index) => (
             <tr key={index}>
-              <td>{user.nome}</td>
-              <td>{user.idade}</td>
-              <td>{user.peso}</td>
-              <td>{user.altura}</td>
-              <td>{user.tempoTreino}</td>
+              <td>{editIndex === index ? (
+                <input
+                  type="text"
+                  value={newUserData.nome}
+                  onChange={(e) => setNewUserData({ ...newUserData, nome: e.target.value })}
+                />
+              ) : user.nome}</td>
+              <td>{editIndex === index ? (
+                <input
+                  type="number"
+                  value={newUserData.idade}
+                  onChange={(e) => setNewUserData({ ...newUserData, idade: e.target.value })}
+                />
+              ) : user.idade}</td>
+              <td>{editIndex === index ? (
+                <input
+                  type="number"
+                  value={newUserData.peso}
+                  onChange={(e) => setNewUserData({ ...newUserData, peso: e.target.value })}
+                />
+              ) : user.peso}</td>
+              <td>{editIndex === index ? (
+                <input
+                  type="number"
+                  value={newUserData.altura}
+                  onChange={(e) => setNewUserData({ ...newUserData, altura: e.target.value })}
+                />
+              ) : user.altura}</td>
+              <td>{editIndex === index ? (
+                <input
+                  type="text"
+                  value={newUserData.tempoTreino}
+                  onChange={(e) => setNewUserData({ ...newUserData, tempoTreino: e.target.value })}
+                />
+              ) : user.tempoTreino}</td>
+              <td>
+                {editIndex === index ? (
+                  <button className="btn btn-success" onClick={handleSave}>Salvar</button>
+                ) : (
+                  <>
+                    <button className="btn btn-warning" onClick={() => handleEdit(index)}>Editar</button>
+                    <button className="btn btn-danger" onClick={() => handleDelete(index)}>Excluir</button>
+                  </>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
