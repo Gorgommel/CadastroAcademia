@@ -1,26 +1,81 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 
-// Registrar os componentes necessários do Chart.js
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
+// Registre os componentes necessários
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const UserGraph = ({ users }) => {
-  // Configuração dos dados do gráfico
+  const [showIdade, setShowIdade] = useState(true);
+  const [showAltura, setShowAltura] = useState(true);
+  const [showPeso, setShowPeso] = useState(true);
+
+  // Filtrando os datasets de acordo com os estados dos checkboxes
+  const datasets = [];
+  if (showIdade) {
+    datasets.push({
+      label: 'Idade',
+      data: users.map(user => user.idade),
+      backgroundColor: 'rgba(75, 192, 192, 0.6)',
+    });
+  }
+  if (showAltura) {
+    datasets.push({
+      label: 'Altura (cm)',
+      data: users.map(user => user.altura),
+      backgroundColor: 'rgba(153, 102, 255, 0.6)',
+    });
+  }
+  if (showPeso) {
+    datasets.push({
+      label: 'Peso (kg)',
+      data: users.map(user => user.peso),
+      backgroundColor: 'rgba(255, 159, 64, 0.6)',
+    });
+  }
+
   const data = {
-    labels: users.map(user => user.nome), // Certifique-se de que a chave esteja correta (deve ser 'nome')
-    datasets: [
-      {
-        label: 'Idade dos Usuários',
-        data: users.map(user => user.idade), // Alterar para 'idade' se necessário
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-      },
-    ],
+    labels: users.map(user => user.nome),
+    datasets: datasets,
   };
 
   return (
     <div>
-      <h2>Gráfico de Idade dos Usuários</h2>
+      <h2>Gráfico de Usuários</h2>
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={showIdade}
+            onChange={() => setShowIdade(!showIdade)}
+          />
+          Mostrar Idade
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={showAltura}
+            onChange={() => setShowAltura(!showAltura)}
+          />
+          Mostrar Altura
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={showPeso}
+            onChange={() => setShowPeso(!showPeso)}
+          />
+          Mostrar Peso
+        </label>
+      </div>
       <Bar data={data} />
     </div>
   );

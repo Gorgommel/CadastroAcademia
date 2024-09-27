@@ -3,8 +3,9 @@ import { Button } from 'react-bootstrap';
 
 const CustomButton = ({ label, icon, onClick }) => {
   return (
-    <Button onClick={onClick}>
-      {icon && <img src={icon} alt="icon" style={{ marginRight: '5px' }} />} {label}
+    <Button onClick={onClick} variant="primary">
+      {icon && <img src={icon} alt="icon" style={{ marginRight: '5px' }} />} 
+      {label}
     </Button>
   );
 };

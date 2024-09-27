@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import UserForm from './Components/UserForm.js'; // Adicionando a extensão .js
-import EditableTable from './Components/EditableTable.js'; // Adicionando a extensão .js
-import UserGraph from './Components/UserGraph.js'; // Adicionando a extensão .js
+import UserForm from './Components/UserForm.js';
+import EditableTable from './Components/EditableTable.js';
+import UserGraph from './Components/UserGraph.js';
 import { Container } from 'react-bootstrap';
 
 const App = () => {
@@ -16,7 +16,7 @@ const App = () => {
       <h1>Cadastro de Usuários da Academia</h1>
       <UserForm onSubmit={handleAddUser} />
       <EditableTable users={users} setUsers={setUsers} />
-      <UserGraph users={users} /> {/* Adicionando o UserGraph */}
+      <UserGraph users={users} />
     </Container>
   );
 };
